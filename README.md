@@ -24,27 +24,15 @@
 1.**登陆页面**
 ![登陆](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/login.png)
 2.**首页**，显示平台一些说明信息等。
-![仪表盘]()
-3.**主机列表**
-进入主机列表界面，可以选择机房和维护人员，使用ajax处理，每次选择会从库中重新查询符合条件的数据；
-这些服务器相关的信息支持自动采集，由于目前写的方法只能完成采集任务，所以并没有将链接放出来，不过可以通过访问指定链接进行访问。
-![主机列表](https://github.com/Hasal/dzhops_picture/blob/master/dzhops_pic/asset.png)
-4.**SaltStack**
-可完成如下功能：
-+ 服务器初始化（如模块部署等）
-+ 程序、配置更新
-+ 日常维护操作
-+ 远程命令执行
-当对Minion执行操作时，会记录本次目标Minion的数量，然后与返回结果的Minion数量进行对比，找出哪些没有返回结果；当接收到返回结果后，使用bootstrap的模态框显示结果，其中蓝色表示执行成功，红色表示有失败存在，可以点击标签查看详细情况；
-![模块部署](https://github.com/Hasal/dzhops_picture/blob/master/dzhops_pic/deploy.png)
-![模块部署-返回结果-模态框展开-失败情况](https://github.com/Hasal/dzhops_picture/blob/master/dzhops_pic/deploy_show.png)
-![模块部署-返回结果-模态框展开-成功情况](https://github.com/Hasal/dzhops_picture/blob/master/dzhops_pic/deploy_show_success.png)
-![远程命令执行](https://github.com/Hasal/dzhops_picture/blob/master/dzhops_pic/execute.png)
-5.**MinionKeys管理**
-可以分别选择已接受、待接受、已拒绝，并且可以选择机房及维护人员，进行对应的管理操作；
-![MinionKeys管理](https://github.com/Hasal/dzhops_picture/blob/master/dzhops_pic/manage.png)
-6.**操作记录**
-可以记录每次操作执行人的账号、操作、目标、及jid，并可以通过jid查看该次操作的返回结果详细情况。
-![操作记录](https://github.com/Hasal/dzhops_picture/blob/master/dzhops_pic/record.png)
-![操作记录-详细](https://github.com/Hasal/dzhops_picture/blob/master/dzhops_pic/record_detail.png)
-7.**更多细节不再赘述**
+![首页](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/index.png)
+3.**用户列表**
+![用户列表](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/userlist.png)
+4.**用户添加**
+![用户添加](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/useradd.png)
+5.**项目管理**
+![项目管理](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/managepro.png)
+6.**命令记录**
+![项目管理](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/commandlist.png)
+
+
+
