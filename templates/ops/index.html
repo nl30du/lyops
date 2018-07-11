@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+
+{% block title1 %}
+index
+{% endblock %}
+
+
+{% block link1 %}
+<script src="/static/js/jquery.min.js"></script>
+<script type="text/javascript">
+    'use strict';
+
+    $(function () {
+
+       var request_url = '{{ request.path }}';
+       var current_url_list = request_url.split("/");
+       var current_url = current_url_list[current_url_list.length-2];
+       var select_id = "#" + current_url;
+
+       $(select_id).addClass("active").siblings().removeClass("active");
+
+       $("#menu li").click(function () {
+           $(this).addClass("active").siblings().removeClass("active");
+       })
+    })
+
+</script>
+{% block js1 %}{% endblock %}
+{% block css1 %}{% endblock %}
+{% block link2 %}
+    <style>
+    /* 下拉按钮样式 */
+    .dropbtn {
+        background-color: #222222;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    /* 容器 <div> - 需要定位下拉内容 */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* 下拉内容 (默认隐藏) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    }
+
+    /* 下拉菜单的链接 */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    /* 鼠标移上去后修改下拉菜单链接颜色 */
+    .dropdown-content a:hover {background-color: #f1f1f1}
+
+    /* 在鼠标移上去后显示下拉菜单 */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    </style>
+
+{% endblock %}
+
+{% endblock %}
+
+
+
+
+{% block main %}
+    {# 此处为导航条设置 #}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/ops/">龙悦运维平台</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right" style="border: 0px;">
+              <div class="dropdown">
+                  <div class="dropbtn">{{ request.user }}<span class="caret"></span></div>
+                  <div class="dropdown-content">
+                    <a href="/ops/change/">修改密码</a>
+                    <a href="/ops/logout/">登出</a>
+                  </div>
+              </div>
+          </ul>
+{#          <form class="navbar-form navbar-right">#}
+{#            <input type="text" class="form-control" placeholder="Search...">#}
+{#          </form>#}
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="container-fluid">
+      <div class="row">
+
+        {# 左侧菜单选项 #}
+        <div id="left_menu" class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar" id="menu">
+
+
+
+{#            <li class="active"><a href="{% url menu.url_name %}">{{ role.name }}<span class="sr-only">(current)</span></a></li>#}
+{#              <li id="{{ menu.id }}"><a href="javascript:;" onclick="handle_url('{% url menu.url_name %}', {{ menu.id }})">{{ role.name }}</a></li>#}
+
+
+            <li class="active"><a href="/ops/">Overview</a></li>
+            <li id="userlist"><a href="/ops/userlist/">用户列表</a></li>
+            <li id="adduser"><a href="/ops/adduser/">添加用户</a></li>
+            <li id="manager"><a href="/ops/manager/">项目管理</a></li>
+            <li id="commandlist"><a href="/ops/commandlist/?index=1">命令记录</a></li>
+          </ul>
+        </div>
+
+        {# 右侧显示主体 #}
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          {% block content1 %}
+          <h1 class="page-header">欢迎使用LyOps平台</h1>
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+{% endblock %}

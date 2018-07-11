@@ -1,0 +1,229 @@
+{% extends 'ops/index.html' %}
+
+
+{% block title1 %}
+userlist
+{% endblock %}
+
+{% block js1 %}
+    <script type="text/javascript" src="/static/js/csrftoken.js"></script>
+    <script type="text/javascript">
+
+        function del(id) {
+            if (confirm("确定删除吗")) {
+                $.ajax({
+                    url: '/ops/manager_modify/',
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        'id': id,
+                        'mode': 'del',
+                    },
+                })
+                .done(function(data) {
+                    if(data.status == 'ok'){
+                        var ID="#"+id;
+                        $(ID).parent().parent().remove();
+                    }
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+            } else {
+                return false;
+            }
+        }
+
+        $(function () {
+
+            var input_content_null = true;
+
+            $("#newbuild").click(function () {
+                $('#modal01').modal('show');
+            });
+
+            function check_null() {
+
+                if($("#pname").val().length == 0){
+                    var a = false;
+                    $("#pname").prev().find('span').css({display: "inline"});
+
+                }else{
+                    var a = true;
+                    // $("#oldpassword").parent().next().next().find("p").css({display: "block"});
+                    $("#pname").prev().find('span').css({display: "none"});
+                }
+
+                if($("#pip").val().length == 0){
+                    var b = false;
+                    $("#pip").prev().find('span').css({display: "inline"});
+
+                }else{
+                    var b = true;
+                    // $("#oldpassword").parent().next().next().find("p").css({display: "block"});
+                    $("#pip").prev().find('span').css({display: "none"});
+                }
+
+                if($("#ppass").val().length == 0){
+                    var c = false;
+                    $("#ppass").prev().find('span').css({display: "inline"});
+
+                }else{
+                    var c = true;
+                    // $("#oldpassword").parent().next().next().find("p").css({display: "block"});
+                    $("#ppass").prev().find('span').css({display: "none"});
+                }
+
+                if(a && b && c){
+                    input_content_null = false;
+                }else{
+                    input_content_null = true;
+                }
+
+            }
+
+
+
+            $("#btn1").click(function () {
+
+                check_null();
+
+                var project_name = $("#pname").val();
+                var lander = $("#pip").val();
+
+
+                if(!input_content_null){
+                    $.ajax({
+                        url: '/ops/manager/check_project/',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            'project_name': project_name,
+                            'lander': lander,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        },
+                    })
+                    .done(function(data) {
+                        if(data.exist == 1){
+                            $("#check1").css({display: 'inline'});
+                        }else if(data.exist == 0){
+                            $("#check1").css({display: 'none'});
+
+                            $("#addproject").submit();
+
+                        }
+                    })
+                    .fail(function() {
+                        console.log("error");
+                    })
+
+
+                }
+
+            })
+
+
+        });
+
+
+
+
+    </script>
+
+    <
+
+{% endblock %}
+{% block css1 %}
+    <style type="text/css">
+        .prompt{
+            font-size: 12px;
+            color: red;
+            display: none;
+        }
+
+
+    </style>
+
+
+{% endblock %}
+
+
+{% block content1 %}
+
+
+
+    <button type="button" class="btn btn-primary" id="newbuild">新建项目</button>
+
+    <div class="modal fade" id="modal01">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3>新建项目</h3>
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="addproject" method="post" action="/ops/manager_modify/">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="">项目名(英文)&nbsp;&nbsp;&nbsp;<span class="prompt">不能为空</span></label>
+                        <input id="pname" name="project_name" type="text" class="form-control" id="exampleInputEmail1" >
+                      </div>
+
+
+                      <div class="form-group">
+                        <label for="">中控机(内网ip)&nbsp;&nbsp;&nbsp;<span class="prompt">不能为空</span></label>
+                        <input id="pip" name="lander" type="text" class="form-control" id="exampleInputEmail1" >
+                      </div>
+
+                      <div class="form-group">
+                        <label for="">登录密码&nbsp;&nbsp;&nbsp;<span class="prompt">不能为空</span></label>
+                        <input id="ppass" name="password" type="password" class="form-control" id="exampleInputEmail1" >
+                      </div>
+
+                      <div class="form-group">
+                        <label for="">登录秘钥</label>
+                        <textarea class="form-control" rows="3" disabled></textarea>
+                      </div>
+
+                      <button id="btn1" class="btn btn-primary" type="button" class="btn btn-default">确 定</button>
+                      &nbsp;&nbsp;&nbsp;<span id="check1" class="prompt">改记录已存在</span>
+                    </form>
+
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <div class="bs-example" data-example-id="hoverable-table">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>项目名</th>
+          <th>中控机</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in project_list %}
+        <tr>
+          <th scope="row">{{ item.id }}</th>
+          <td>{{ item.name }}</td>
+          <td>{{ item.lander }}</td>
+          <td><button id="{{ item.id }}" type="button" class="btn btn-danger btn-sm" onclick="del({{ item.id }});">删除</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
