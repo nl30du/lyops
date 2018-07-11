@@ -22,7 +22,7 @@
 
 ## 功能介绍
 1.**登陆页面**
-![登陆]()
+![登陆](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/login.png)
 2.**首页**，显示平台一些说明信息等。
 ![仪表盘]()
 3.**主机列表**
