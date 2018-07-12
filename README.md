@@ -34,5 +34,71 @@
 6.**命令记录**显示用户操作命令行为记录。
 ![项目管理](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/commandlist.png)
 
+## 安装
+安装必备软件
 
+```
+yum -y update && yum -y install mysql-devel wget epel-release python-devel gcc c++ make openssl openssl-devel passwd libffi libffi-devel
+yum -y install ansible
+wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+```
+
+mysql-5.6安装
+```
+安装方式(略),注意修改mysql字符集为utf8
+建立对应的数据库：
+mysql>CREATE DATABASE `lyops` DEFAULT CHARACTER SET utf8;
+```
+
+配置django配置文件lyops/settings.py
+
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'lyops',
+        'USER': '对应授权用户名',
+        'PASSWORD': '对应授权用户密码',
+        'HOST': 'IP',
+        'PORT': 'PORT',
+    }
+}
+```
+
+
+上面这些操作都完成后就可以部署项目了
+
+安装依赖
+
+pip install -r requirements.txt
+
+同步数据库
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+创建管理员
+
+python manage.py createsuperuser
+
+runserver运行检查是否正常
+
+python manage.py runserver 0.0.0.0:8080
+
+如果无法正常运行，请检查以上步骤
+
+访问路径：
+http://ip:8080/ops/
+  
+email：tangcc_tl@163.com  
+
+PS:
+
+  正常运行后，正式上线最好部署django+nginx+uwsgi(gunicorn)环境  
+  
+
+
+水平有限请见谅。
 
