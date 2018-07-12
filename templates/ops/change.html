@@ -1,0 +1,242 @@
+{% extends 'ops/index.html' %}
+
+
+{% block title1 %}
+change
+{% endblock %}
+
+{% block js1 %}
+    <script type="text/javascript" src="/static/js/csrftoken.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            var a = false;
+            var input_content_null = true;
+            var input_password_error = true;
+            var input_newpassword_error = true;
+
+            function check_null() {
+                var $check_oldpass = $("#oldpassword").parent().next().find("p");
+
+                if($("#oldpassword").val().length == 0){
+                    var a = false;
+                    $("#oldpassword").parent().next().next().find("p").css({display: "none"});
+                    $check_oldpass.css({display: "block"});
+                }else{
+                    var a = true;
+                    // $("#oldpassword").parent().next().next().find("p").css({display: "block"});
+                    $check_oldpass.css({display: "none"});
+                }
+
+                var $check_newpass = $("#newpassword").parent().next().next().find("p");
+                if($("#newpassword").val().length == 0){
+                    var b = false;
+                    $("#newpassword").parent().next().find("p").css({display: "none"});
+                    $check_newpass.css({display: "block"});
+                }else{
+                    var b = true;
+                    // $("#newpassword").parent().next().find("p").css({display: "block"});
+                    $check_newpass.css({display: "none"});
+                }
+
+                var $check_rnewpass = $("#rnewpassword").parent().next().next().find("p");
+                if($("#rnewpassword").val().length == 0){
+                    var c = false;
+                    $("#rnewpassword").parent().next().find("p").css({display: "none"});
+                    $check_rnewpass.css({display: "block"});
+                }else{
+                    var c = true;
+                    // $("#rnewpassword").parent().next().find("p").css({display: "block"});
+                    $check_rnewpass.css({display: "none"});
+                }
+
+                if(a && b && c){
+                    input_content_null = false;
+                }else{
+                    input_content_null = true;
+                }
+
+            }
+
+
+            function check_newpass() {
+                var $newpass = $("#newpassword");
+
+                if($newpass.val().length < 8){
+                    var a = false;
+                    $newpass.parent().next().find('p').css({display: "block"});
+                }else{
+                    var a = true;
+                    $newpass.parent().next().find('p').css({display: "none"});
+
+                    var $rnewpass = $("#rnewpassword");
+                    if($newpass.val() == $rnewpass.val()){
+                       input_newpassword_error = false;
+                       $rnewpass.parent().next().find("p").css({display: "none"});
+                    }else{
+                       input_newpassword_error = true;
+                       $rnewpass.parent().next().find("p").css({display: "block"});
+                    }
+                }
+
+            }
+
+            $("#btn1").click(function () {
+
+                check_null();
+
+                if(!input_content_null){
+                    var password = $("#oldpassword").val();
+
+                    $.ajax({
+                        url: '/ops/check_password/',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            'username': '{{ request.user }}',
+                            'password': password,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        },
+                    })
+                    .done(function(data) {
+                        var res = data.status_code;
+                        var $password_error = $("#oldpassword").parent().next().next().find("p");
+                        if(res == 0){
+                            $password_error.css({display: "block"});
+                            input_password_error = true;
+                        }else if(res == 1){
+                            $password_error.css({display: "none"});
+                            input_password_error = false;
+                        }
+
+                        if(!input_password_error){
+                            check_newpass();
+                            if(!input_newpassword_error){
+                                // location.href = "/ops/handle_change/";
+                                //$('#btn1').click(function(){
+                                //    //控制逻辑
+                                //    $('#modal01').modal('show');
+                                //})
+
+                                $('#modal01').modal('show');
+                                $("#btn3").click(function () {
+                                    a = true;
+
+                                })
+                            }
+                        }
+
+                    })
+                    .fail(function() {
+                        console.log("error");
+                    })
+
+                }
+
+
+            })
+
+            $("#btn2").click(function () {
+
+                $("#oldpassword").val('');
+                $("#newpassword").val('');
+                $("#rnewpassword").val('');
+                console.log('a');
+
+            })
+
+
+        })
+
+
+
+    </script>
+
+{% endblock %}
+
+
+{% block content1 %}
+
+
+    <div class="modal fade" id="modal01">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <h1>确认修改密码？</h1>
+                </div>
+
+                <div class="modal-footer">
+{#                    <button class="btn btn-primary">确定</button>#}
+                    <button class="btn btn-primary" data-dismiss="modal" id="btn3">确定</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <h1 class="page-header">修改密码</h1>
+
+
+    <form class="form-horizontal" id="change_password" method="post" action="/ops/handle_change/">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="col-sm-2 control-label">用户名</label>
+        <div class="col-sm-6">
+          <input type="text" name="username" class="form-control" placeholder="{{ request.user }}" disabled id="username">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">原密码</label>
+        <div class="col-sm-6">
+          <input type="password" class="form-control" name="oldpassword" id="oldpassword">
+        </div>
+        <div class="col-sm-4">
+           <p class="form-control-static" style="color: #da260e;display: none;">不能为空，请输入原始密码</p>
+        </div>
+        <div class="col-sm-4">
+           <p class="form-control-static" style="color: #da260e;display: none;">原始密码错误</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" >新密码</label>
+
+        <div class="col-sm-6">
+          <input type="password" class="form-control" name="newpassword" id="newpassword">
+        </div>
+        <div class="col-sm-4">
+           <p class="form-control-static" style="color: #da260e;display: none;">(新密码长度须在8到32位之间，且必须包含大小写字母)</p>
+        </div>
+        <div class="col-sm-4">
+           <p class="form-control-static" style="color: #da260e;display: none;">不能为空，请输入新密码</p>
+        </div>
+
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">重复密码</label>
+        <div class="col-sm-6">
+          <input type="password" class="form-control" name="rnewpassword" id="rnewpassword">
+        </div>
+        <div class="col-sm-4">
+           <p class="form-control-static" style="color: #da260e;display: none;">两次输入的密码不一致</p>
+        </div>
+
+        <div class="col-sm-4">
+           <p class="form-control-static" style="color: #da260e;display: none;">不能为空，请再次输入新密码</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="button" class="btn btn-primary" id="btn1">确 定</button>
+          <button type="button" class="btn btn-default" id="btn2">取 消</button>
+        </div>
+
+
+
+      </div>
+
+    </form>
+
+{% endblock %}
