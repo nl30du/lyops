@@ -94,8 +94,22 @@ http://ip:8080/ops/
   
 email：tangcc_tl@163.com  
 
-PS:
 
+目标机的软件安装：
+
+	1、openssh-server的版本要升级到6.6p
+	2、在升级完成后，修改sshd的配置文件，然后重启服务
+		AuthorizedKeysCommand /sbin/fetchkey.sh
+		AuthorizedKeysCommandUser root
+	3、上传fetchkey.sh、prelogin.sh两个文件(源码中scripts/)至/sbin/目录下，并添加执行权限
+	
+syslog-ng服务安装：
+	待续
+	
+	
+	
+PS:
+  一定要保证中控机(跳板机)openssh-server的版本一致且为6.6p，更改的版本未测试 	
   正常运行后，正式上线最好部署django+nginx+uwsgi(gunicorn)环境  
   
 
