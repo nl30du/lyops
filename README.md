@@ -25,13 +25,13 @@
 ![登陆](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/login.png)
 2.**首页**，显示平台一些说明信息等。
 ![首页](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/index.png)
-3.**用户列表**
+3.**用户列表**，显示所有用户信息(id，真实用户，登录用户权限，数据指纹，复制key到其他项目，控制用户访问等)。
 ![用户列表](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/userlist.png)
-4.**用户添加**
+4.**用户添加**，选择对应项目以及用户权限类型，执行添加操作，会在后台执行成功后返回对应信息至页面。
 ![用户添加](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/useradd.png)
-5.**项目管理**
+5.**项目管理**，添加对应项目(中控机)，用户密码或者秘钥认证。
 ![项目管理](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/managepro.png)
-6.**命令记录**
+6.**命令记录**显示用户操作命令行为记录。
 ![项目管理](https://github.com/nl30du/blog/blob/master/blog/lyops/pic/commandlist.png)
 
 
