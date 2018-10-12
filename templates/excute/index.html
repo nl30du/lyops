@@ -2,23 +2,15 @@
 
 
 {% block title1 %}
-userlist
+hostlist
 {% endblock %}
 
 {% block js1 %}
     <script type="text/javascript" src="/static/js/csrftoken.js"></script>
     <script type="text/javascript">
         $(function () {
-            var a = $("#nav1").css("width");
-            var b = $("#ul1").css("width");
-            var aa = a.split("px")[0];
-            var bb = b.split("px")[0];
-            var c = (aa-bb)/2+"px";
-            console.log(c);
-            $("#ul1").css({marginLeft: c});
 
         })
-
     </script>
 
     {% block js2 %}{% endblock %}
@@ -29,16 +21,12 @@ userlist
 {% block content1 %}
     <ol class="breadcrumb">
       <li class="active">主机管理</li>
-      <li><a href="#">剧本管理</a></li>
+      <li><a href="/excute/?type=-1&page=service">服务管理</a></li>
       <li><a href="#">批量执行</a></li>
       <li><a href="#">服务剧本</a></li>
     </ol>
 
     {% block content2 %}{% endblock %}
-
-    <button type="button" class="btn btn-primary">添加主机</button>
-
-
 
 
 

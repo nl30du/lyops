@@ -1,0 +1,95 @@
+{% extends 'excute/index.html' %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        $(function () {
+
+            function GetRequest() {
+                var url = location.search; //获取url中"?"符后的字串
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for(var i = 0; i < strs.length; i ++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            }
+
+            var Request = new Object();
+            Request = GetRequest();
+            aa = Request['type'];
+            $("#select_type").val(aa);
+
+            $("#select_type").change(function () {
+                var type = $(this).val();
+
+                window.location.href = "/excute/?type="+type+"&page=service";
+
+
+
+            });
+        })
+    </script>
+{% endblock %}
+
+
+
+{% block content2 %}
+
+    <table class="table table-bordered">
+      <span>选择主机状态:&nbsp</span>
+      <select id='select_type' style="height: 26px;width: 100px;">
+
+          <option value="0">DB</option>
+          <option value="1">Redis</option>
+          <option value="2">Serverlist/mycat</option>
+          <option value="3">cobar/mycat</option>
+          <option value="4">GM</option>
+          <option value="5">Sfs</option>
+          <option value="6">api</option>
+          <option value="7">DB_backup</option>
+          <option value="8">other</option>
+          <option value="-1">ALL</option>
+
+      </select>
+      &nbsp&nbsp
+      <span>搜索:&nbsp;</span>
+      <input type="text">
+      <br>
+      <br>
+      <thead>
+        <tr>
+          <th>服务编号</th>
+          <th>服务类型</th>
+          <th>所属主机</th>
+          <th>部署状态</th>
+          <th>软件版本</th>
+          <th>监听端口</th>
+          <th>服务域名</th>
+          <th>使用状态</th>
+          <th>安装方式</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for service in service_list %}
+        <tr>
+          <td scope="row">{{ service.service_num }}</td>
+          <td>{{ service.get_type_display }}</td>
+          <td>{{ service.deploy_host }}</td>
+          <td>{{ service.deploy_time }}</td>
+          <td>{{ service.version }}</td>
+          <td>{{ service.port }}</td>
+          <td><a>查看服务域名</a></td>
+          <td>{{ service.get_use_status_display }}</td>
+          <td>{{ service.get_install_way_display }}</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+
+
+{% endblock %}

@@ -4,6 +4,7 @@
 import os
 import sys
 import logging
+import json
 
 from collections import namedtuple
 from ansible.parsing.dataloader import DataLoader
@@ -20,6 +21,7 @@ from ansible.plugins.callback import CallbackBase
 logger = logging.basicConfig()
 
 class ResultsCollector(CallbackBase):
+
     def __init__(self, *args, **kwargs):
         super(ResultsCollector, self).__init__(*args, **kwargs)
         self.host_ok = {}
@@ -27,12 +29,16 @@ class ResultsCollector(CallbackBase):
         self.host_failed = {}
 
     def v2_runner_on_unreachable(self, result):
+        print dir(result)
+        print result._result
         self.host_unreachable[result._host.get_name()] = result
 
     def v2_runner_on_ok(self, result, *args, **kwargs):
+        print result._result
         self.host_ok[result._host.get_name()] = result
 
     def v2_runner_on_failed(self, result, *args, **kwargs):
+        print result._result
         self.host_failed[result._host.get_name()] = result
 
 

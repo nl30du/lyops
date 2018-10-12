@@ -100,7 +100,7 @@ class my_ansible_play():
                        options=self.options,
                        passwords=self.passwords)
         self.results_callback=mycallback()
-        #print dir(self.results_callback)
+        # print dir(self.results_callback)
         # print dir(pbex._tqm)
         pbex._tqm._stdout_callback=self.results_callback
         try:

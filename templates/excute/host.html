@@ -1,0 +1,85 @@
+{% extends 'excute/index.html' %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        $(function () {
+
+            function GetRequest() {
+                var url = location.search; //获取url中"?"符后的字串
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for(var i = 0; i < strs.length; i ++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            }
+
+            var Request = new Object();
+            Request = GetRequest();
+            aa = Request['status'];
+            $("#select_status").val(aa);
+
+            $("#select_status").change(function () {
+                var status = $(this).val();
+
+                window.location.href = "/excute/?status="+status+"&page=host";
+
+
+
+            });
+        })
+    </script>
+{% endblock %}
+
+
+
+{% block content2 %}
+
+    <table class="table table-bordered">
+      <span>选择主机状态:&nbsp</span>
+      <select id='select_status' style="height: 26px;width: 100px;">
+          <option value="0">new</option>
+          <option value="1">up</option>
+          <option value="2">cancel</option>
+          <option value="3">unknown</option>
+          <option value="4">ALL</option>
+
+      </select>
+      &nbsp&nbsp
+      <span>搜索:&nbsp;</span>
+      <input type="text">
+      <br>
+      <br>
+      <thead>
+        <tr>
+          <th>公网IP</th>
+          <th>内网IP</th>
+          <th>机器状态</th>
+          <th>注册时间</th>
+          <th>主机配置</th>
+          <th>价格</th>
+          <th>所属项目</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for host in hostlist %}
+        <tr>
+          <td scope="row">{{ host.pub_ip }}</td>
+          <td>{{ host.inner_ip }}</td>
+          <td>{{ host.get_status_display }}</td>
+          <td>{{ host.create_time }}</td>
+          <td>{{ host.host_configuration }}</td>
+          <td>${{ host.price }}/月</td>
+          <td>{{ host.project_name }}</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+
+
+{% endblock %}

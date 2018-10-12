@@ -37,8 +37,8 @@ class AnsiInterface(AnsibleAPI):
         commands
         """
         self.run(host_list, 'command', cmds)
-        result = self.get_result()
-        return result
+        # result = self.get_result()
+        # return result
 
     def exec_shell(self, host_list, cmds):
         """
@@ -85,7 +85,28 @@ if __name__ == "__main__":
 
     interface = AnsiInterface(resource)
     #print "copy: ", interface.copy_file(['172.20.3.18', '172.20.3.31'], src='/Users/majing/test1.py', dest='/opt')
-    print interface.exec_shell(['192.168.146.131', '192.168.146.132'], 'echo "hehe" && uptime')
+    # result_data = interface.exec_shell(['192.168.146.131', '192.168.146.132'], 'echo "hehe" && uptime;ls /root/sdjfksl')
+    # for key, val in result_data.items():
+    #     for i, j in val.items():
+    #         if key != 'unreachable':
+    #             # print "\033[0;32mtest \033[0m"
+    #             if len(j['stderr']) == 0:
+    #                 color = 32
+    #             else:
+    #                 color = 31
+    #             print "\033[0;%dm%s | %s >>\033[0m" % (color, i, key)
+    #             print "\033[0;%dm" % color + j['stdout'] + "\033[0m"
+    #             print "\033[0;%dm" % color + j['stderr'] + "\033[0m"
+    #         else:
+    #             print "\033[1;31m%s | %s! => {\033[0m" % (i, key)
+    #             print "\033[1;31m    \"changed\": false,\n    \"msg\": \"%s\",\n    \"unreachable\": true\033[0m" % j.strip("\r\n")
+    #             print "\033[1;31m}\n\033[0m"
+    #         print
+
+
     print interface.exec_playbook(['192.168.146.131', '192.168.146.132'])
-    #print "shell: ", interface.exec_script(['172.20.3.18', '172.20.3.31'], 'chdir=/home ls')
+
+
+
+    # print "shell: ", interface.exec_script(['172.20.3.18', '172.20.3.31'], 'chdir=/home ls')
     #print "shell: ", interface.exec_script(['172.20.3.18', '172.20.3.31'], 'sh /opt/test.sh')
