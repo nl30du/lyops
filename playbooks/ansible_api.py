@@ -15,30 +15,90 @@ from ansible.inventory.host import Host
 from ansible.playbook.play import Play
 from ansible.executor.task_queue_manager import TaskQueueManager
 from ansible.executor.playbook_executor import PlaybookExecutor
-from ansible.plugins.callback import CallbackBase
+from ansible.plugins.callback import CallbackBase, default
 
 
 logger = logging.basicConfig()
 
-class ResultsCollector(CallbackBase):
+class ResultsCollector(default.CallbackModule):
 
-    def __init__(self, *args, **kwargs):
-        super(ResultsCollector, self).__init__(*args, **kwargs)
+    def __init__(self):
+        super(ResultsCollector, self).__init__()
+        self.host_ok = {}
+        self.host_unreachable = {}
+        self.host_failed = {}
+        # self.playbook_res = {}
+
+    def v2_runner_on_unreachable(self, result):
+        # print dir(result)
+        # print result._result
+        super(ResultsCollector, self).v2_runner_on_unreachable(result)
+        # task_name = result._task
+        self.host_unreachable[result._host.get_name()] = result
+
+    def v2_runner_on_ok(self, result):
+        # print dir(result)
+        # print result._result
+        super(ResultsCollector, self).v2_runner_on_ok(result)
+        # task_name = result._task
+        self.host_ok[result._host.get_name()] = result
+
+    def v2_runner_on_failed(self, result, ignore_errors=False):
+        super(ResultsCollector, self).v2_runner_on_failed(result, ignore_errors)
+        # task_name = result._task
+        self.host_failed[result._host.get_name()] = result
+
+    # def v2_playbook_on_stats(self, stats):
+    #     super(ResultsCollector, self).v2_runner_on_failed(stats)
+    #     hosts = sorted(stats.processed.keys())
+    #     for h in hosts:
+    #         t = stats.summarize(h)
+    #         print h
+    #         # print h, t['changed']
+    #         # print h, t['unreachable']
+    #         # print h, t['failures']
+
+class ResultsCollectorForhoc(CallbackBase):
+
+    def __init__(self):
+        super(ResultsCollectorForhoc, self).__init__()
         self.host_ok = {}
         self.host_unreachable = {}
         self.host_failed = {}
 
+    def printinfo(self, result_data, res):
+        if res == 'unreachable':
+            # print result_data._host.get_name(), result_data._result
+            print '\033[1;31m%s | UNREACHABLE! => {' % result_data._host.get_name()
+            for key, val in result_data._result.items():
+                print '    \"%s\": %s' % (key, str(val).strip('\r\n'))
+            print '}\033[0m\n'
+        elif res == 'ok':
+            # print result_data._host.get_name(), result_data._result
+            print '\033[0;32m%s | SUCCESS | rc=0 >>' % result_data._host.get_name()
+            cmd_res = result_data._result
+            print cmd_res['stdout'] + '\n\033[0m\n'
+
+        elif res == 'failed':
+            print '\033[0;31m%s | FAILED | rc=2 >>' % result_data._host.get_name()
+            cmd_res = result_data._result
+            print cmd_res['stdout'] +cmd_res['stderr'] + '\n\033[0m\n'
+
     def v2_runner_on_unreachable(self, result):
-        print dir(result)
-        print result._result
+        # print dir(result)
+        # print result._result
+        self.printinfo(result, 'unreachable')
         self.host_unreachable[result._host.get_name()] = result
 
-    def v2_runner_on_ok(self, result, *args, **kwargs):
-        print result._result
+    def v2_runner_on_ok(self, result):
+        # print dir(result)
+        # print result._result
+        self.printinfo(result, 'ok')
         self.host_ok[result._host.get_name()] = result
 
     def v2_runner_on_failed(self, result, *args, **kwargs):
-        print result._result
+        # print result._result
+        self.printinfo(result, 'failed')
         self.host_failed[result._host.get_name()] = result
 
 
@@ -169,7 +229,7 @@ class AnsibleAPI(object):
 
         # actually run it
         tqm = None
-        self.callback = ResultsCollector()
+        self.callback = ResultsCollectorForhoc()
         try:
             tqm = TaskQueueManager(
                 inventory=self.inventory,
@@ -229,7 +289,7 @@ class AnsibleAPI(object):
         for host, result in self.callback.host_unreachable.items():
             self.results_raw['unreachable'][host] = result._result['msg']
 
-        return self.results_raw
+        return self.callback.playbook_res
 
 
 if __name__ == '__main__':

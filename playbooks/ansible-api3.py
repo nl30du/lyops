@@ -18,7 +18,10 @@ class AnsiInterface(AnsibleAPI):
         error_msg = {}
         for key, value in error_ips.items():
             temp = {}
-            temp[key] = value.get('stderr')
+            try:
+                temp[key] = value.get('stderr')
+            except:
+                pass
             error_msg.update(temp)
         info['failed'] = error_msg
         return json.dumps(info)
@@ -59,7 +62,7 @@ class AnsiInterface(AnsibleAPI):
     def exec_playbook(self, host_list):
         self.run_playbook(host_list)
         result = self.get_result()
-        return self.deal_result(result)
+        return result
 
 
 if __name__ == "__main__":
@@ -67,25 +70,34 @@ if __name__ == "__main__":
     #            {"hostname": "172.20.3.31", "port": "22", "username": "root", "password": "password", "ip": '172.20.3.31'}]
 
     resource = [
-        {"hostname": "192.168.146.131", "port": "22", "username": "root", "password": "centos", "ip": '192.168.146.131',
+        {"hostname": "192.168.1.41", "port": "22", "username": "root", "password": "centos", "ip": '192.168.1.41',
             'vars': {
                 'style': 'server',
                 'role':'master',
-                'slave':'130',
+                'slave':'41',
             }
         },
-        {"hostname": "192.168.146.132", "port": "22", "username": "root", "password": "centos", "ip": '192.168.146.132',
+        {"hostname": "192.168.1.44", "port": "22", "username": "root", "password": "centos", "ip": '192.168.1.44',
             'vars': {
                 'style': 'instance',
                 'role':'slave',
-                'slave':'130',
+                'slave':'41',
             }
         },
+        {"hostname": "192.168.1.45", "port": "22", "username": "root", "password": "Aa123456", "ip": '192.168.1.45',
+             'vars': {
+                 'style': 'instance',
+                 'role': 'slave',
+                 'slave': '41',
+             }
+         },
     ]
 
     interface = AnsiInterface(resource)
     #print "copy: ", interface.copy_file(['172.20.3.18', '172.20.3.31'], src='/Users/majing/test1.py', dest='/opt')
-    # result_data = interface.exec_shell(['192.168.146.131', '192.168.146.132'], 'echo "hehe" && uptime;ls /root/sdjfksl')
+    # result_data = interface.exec_shell(['192.168.1.41', '192.168.1.44', '192.168.1.45'], 'ifconfig')
+    # print result_data
+
     # for key, val in result_data.items():
     #     for i, j in val.items():
     #         if key != 'unreachable':
@@ -104,9 +116,7 @@ if __name__ == "__main__":
     #         print
 
 
-    print interface.exec_playbook(['192.168.146.131', '192.168.146.132'])
-
-
+    print interface.exec_playbook(['192.168.1.41', '192.168.1.44', '192.168.1.45'])
 
     # print "shell: ", interface.exec_script(['172.20.3.18', '172.20.3.31'], 'chdir=/home ls')
     #print "shell: ", interface.exec_script(['172.20.3.18', '172.20.3.31'], 'sh /opt/test.sh')

@@ -10,6 +10,7 @@ from ansible.vars import VariableManager
 from ansible.inventory import Inventory
 from ansible.executor.playbook_executor import PlaybookExecutor
 
+
 variable_manager = VariableManager()
 loader = DataLoader()
 
