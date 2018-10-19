@@ -1,0 +1,9 @@
+- hosts: default_groups 
+  user: root
+  gather_facts: false
+
+  tasks:
+    - name: test cmd 1
+      shell: mkdir /root/aaaa
+    - name: test cmd 2
+      shell: touch /root/oooo.log
