@@ -1,14 +1,22 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.contrib import auth
-from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
-import json
-from models import *
+import os
+import sys
+os.environ['DJANGO_SETTINGS_MODULE'] = 'lyops.settings'
+import time
+import commands
+default_encoding = 'utf-8'
+if sys.getdefaultencoding() != default_encoding:
+    reload(sys)
+    sys.setdefaultencoding(default_encoding)
 
+from django.shortcuts import render
+from django.http import HttpResponse, JsonResponse
+from dwebsocket import require_websocket
+from models import *
+from ansi2html import Ansi2HTMLConverter
+from playbooks.ansible_run import *
 
 # Create your views here.
 def index(request):
@@ -61,3 +69,46 @@ def addhost(request):
     except (BaseException), e:
         print e
         return JsonResponse({'result': 0})
+
+def testwsindex(request):
+    return render(request, 'excute/websocket_test.html')
+
+@require_websocket
+def testws(request):
+    conv = Ansi2HTMLConverter(inline=True)
+
+    # message = request.websocket.wait()
+
+
+
+    with open('/data/pycharm/python2_base/lyops/excute/playbooks/ansible-3.out', 'r') as f:
+        while True:
+
+            ansible_start_pid = commands.getstatusoutput('ps aux|grep ansible_start | grep -v grep')[1]
+            if ansible_start_pid:
+                while True:
+
+                    content = f.readline()
+                    if content:
+                        message = b'%s' % content
+                        request.websocket.send(conv.convert(message, full=False))
+                    else:
+                        time.sleep(1)
+                        break
+            else:
+                while True:
+                    content = f.readline()
+                    if content:
+                        message = b'%s' % content
+                        request.websocket.send(conv.convert(message, full=False))
+                    else:
+                        try:
+                            request.websocket.send(b'filenull')
+                            message = request.websocket.wait()
+                        except:
+                            break
+                break
+
+        # for message in request.websocket:
+        #     # f = open('/data/pycharm/python2_base/lyops/playbooks/ansible-3.out', 'r')
+        #     request.websocket.send(message)  # 发送消息到客户端

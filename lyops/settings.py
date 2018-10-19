@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'lyops.urls'
 
 TEMPLATES = [
@@ -132,3 +133,7 @@ AUTH_USER_MODEL = 'ops.UserProfile'
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
 LOGIN_URL = '/ops/login/'
+
+
+# MIDDLEWARE_CLASSES=dwebsocket.middleware.WebSocketMiddleware
+WEBSOCKET_ACCEPT_ALL=True
