@@ -103,7 +103,7 @@ class Services(models.Model):
         (3, u'other'),
     )
     # to_db = models.ForeignKey('self', related_name='uuid', verbose_name='to_db', blank=True, null=True)
-    # to_slave_db = models.ForeignKey('self', verbose_name='slave-db', blank=True, null=True)
+    # to_subordinate_db = models.ForeignKey('self', verbose_name='subordinate-db', blank=True, null=True)
     install_way = models.PositiveSmallIntegerField(choices=install_way_choices, verbose_name='安装方式')
 
     def __str__(self):
@@ -116,11 +116,11 @@ class Services(models.Model):
 
 class DBms(models.Model):
     '''db信息关系表'''
-    master = models.ForeignKey(Services, verbose_name='主库')
-    slave = models.OneToOneField(Services, related_name='uuid', verbose_name='从库')
+    main = models.ForeignKey(Services, verbose_name='主库')
+    subordinate = models.OneToOneField(Services, related_name='uuid', verbose_name='从库')
 
     def __str__(self):
-        return "%s-%s" % (self.master, self.slave)
+        return "%s-%s" % (self.main, self.subordinate)
 
     class Meta:
         verbose_name = u'db从主表'

@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(
             model_name='dbms',
-            name='slave',
+            name='subordinate',
             field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='uuid', to='excute.Services', verbose_name='\u4ece\u5e93'),
         ),
     ]

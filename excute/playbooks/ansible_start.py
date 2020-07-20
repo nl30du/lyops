@@ -30,16 +30,16 @@ resource = {
              "ip": '192.168.146.131',
              'vars': {
                  'style': 'server',
-                 'role': 'master',
-                 'slave': '41',
+                 'role': 'main',
+                 'subordinate': '41',
              }
              },
             {"hostname": "192.168.146.132", "port": "22", "username": "root", "password": "centos",
              "ip": '192.168.146.132',
              'vars': {
                  'style': 'instance',
-                 'role': 'slave',
-                 'slave': '41',
+                 'role': 'subordinate',
+                 'subordinate': '41',
              }
              },
         ],
