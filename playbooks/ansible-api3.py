@@ -73,22 +73,22 @@ if __name__ == "__main__":
         {"hostname": "192.168.1.41", "port": "22", "username": "root", "password": "centos", "ip": '192.168.1.41',
             'vars': {
                 'style': 'server',
-                'role':'master',
-                'slave':'41',
+                'role':'main',
+                'subordinate':'41',
             }
         },
         {"hostname": "192.168.1.44", "port": "22", "username": "root", "password": "centos", "ip": '192.168.1.44',
             'vars': {
                 'style': 'instance',
-                'role':'slave',
-                'slave':'41',
+                'role':'subordinate',
+                'subordinate':'41',
             }
         },
         {"hostname": "192.168.1.45", "port": "22", "username": "root", "password": "Aa123456", "ip": '192.168.1.45',
              'vars': {
                  'style': 'instance',
-                 'role': 'slave',
-                 'slave': '41',
+                 'role': 'subordinate',
+                 'subordinate': '41',
              }
          },
     ]

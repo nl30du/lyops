@@ -98,12 +98,12 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='dbms',
-            name='master',
+            name='main',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='excute.Services', verbose_name='\u4e3b\u5e93'),
         ),
         migrations.AddField(
             model_name='dbms',
-            name='slave',
+            name='subordinate',
             field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='pk', to='excute.Services', verbose_name='\u4ece\u5e93'),
         ),
     ]
